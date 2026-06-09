@@ -137,13 +137,32 @@ Course, tool, concept, and path pages follow the same spirit (frontmatter + rela
 ### ingest
 Trigger: human drops a course folder (or new lectures) into `course.raw/` and says ingest.
 
-1. Read `_meta.md` first — provider, structure, and level tell you how to interpret the folder and pitch the wiki pages. Then read all lecture transcripts in order (`L#`, or module-then-lecture for `M#L#`).
-2. If a `project/` directory exists, read it too — start with the README/notebook entry point, then the core source files. Demo code is often where the real practical tips live (actual prompts, retry logic, eval setups, library versions, glue code the lectures gloss over). Mine it for: concrete patterns worth putting in subject pages' "Key ideas & practical tips", `applied-in` links between subjects and tools, and the artifact for the shortest-path checkpoint ("you know you've got it when you can rebuild X from the demo project").
-3. Discuss with the human (default mode): give a 5–10 bullet takeaway summary and propose which subject/concept/tool pages this course should create or update. Wait for direction unless told to batch.
-4. Write/update the course page in `courses/`. Include a short "Demo project" section when one exists: what it builds, the stack, and links to the key files in `course.raw/`.
-5. Create or update every affected page in `subjects/`, `concepts/`, `tools/` — integrate, don't append; revise the synthesis, update 80/20 and shortest-path sections, add `taught-in` links both directions.
-6. Flag contradictions explicitly: if the new course disagrees with an existing page, note both claims with provenance and (if clear) which is more current. Code-vs-lecture mismatches count (the code is usually more current than the narration).
-7. Update `overview.md` if the subject map's shape changed; update `index.md`; append to `log.md`.
+**Course anatomy.** deeplearning.ai courses are structured as theory + demo pairs: each lecture explains a concept and then demonstrates it in code. The project code lives alongside the lectures in the same course directory — it is not supplementary material, it is the other half of the teaching unit. Never read lectures without their paired code, and never read code without its lecture context. The full teaching signal only emerges from the pair: what the lecture claims, what the code actually does, and where they differ (code is usually more concrete and current).
+
+1. **Orient.** Read `_meta.md` — provider, structure, and level tell you how to interpret the folder. Then scan the lecture list and the project files side by side. Build a **lecture→code map**: which notebooks or scripts correspond to which lectures. This map is your working scaffold; every downstream decision (what subjects to create, which `taught-in` links to add, where to source the "Key ideas" bullets) flows from it.
+
+2. **Read in pairs.** For each lecture (in order), read the transcript and its corresponding project code together — don't batch all lectures first and code second. Per pair, extract:
+   - The subject(s) being theorized in the lecture
+   - How the code demonstrates or extends what the lecture explains
+   - Concrete details only the code reveals: actual prompts, retry/fallback logic, eval setups, hyperparameter choices, library versions, glue patterns the narration glosses over
+   - Any mismatch between what the lecture says and what the code does — flag these explicitly; the code is the authoritative version
+
+3. **Build a course map before writing.** Synthesize the lecture→code pairs into a subject map: which subjects are covered, across which lectures and files, and at what depth. Subjects appearing across multiple lectures need one unified page, not fragments. Use this map to decide what to create versus update.
+
+4. **Discuss (default mode).** Give a 5–10 bullet takeaway — one per major subject covered — and propose which subject/concept/tool pages to create or update, noting whether each is new, a major update, or a minor addition. Wait for direction unless told to batch.
+
+5. **Write the course page** in `courses/`. Required sections: overview, what it teaches (bullet per subject), who it's for, prerequisite subjects, demo project (what it builds, the stack, key file links into `course.raw/`), and a **lecture index** — a table mapping each lecture ID to its topic and the corresponding project file(s). The lecture index is the bridge; it makes the lecture→code relationship explicit and citable.
+
+6. **Write/update subject, concept, and tool pages.** Integrate — don't append. Per page:
+   - Revise the 80/20 and shortest-path sections to reflect what this course adds
+   - Add `taught-in` links in both directions (subject → course with lecture IDs, course page → subject)
+   - Add `applied-in` links where the demo code grounds a subject in a concrete tool or pattern
+   - Populate "Key ideas & practical tips" from both lecture and code, each cited with provenance — `(→ [[courses/x]], L3)` for lecture claims, `(→ [[courses/x]], project/notebook.ipynb)` for code-derived insights; never blend the two
+   - Use the demo project artifact as the shortest-path checkpoint: "you know you've got it when you can rebuild X from the demo"
+
+7. **Flag contradictions.** If the new course disagrees with an existing wiki page — or if a lecture contradicts its own paired code — note both claims with provenance and indicate which is more current. Code-vs-lecture mismatches within the same course always count.
+
+8. **Update housekeeping.** Update `overview.md` if the subject map's shape changed; update `index.md`; append to `log.md`.
 
 A single course typically touches 5–15 wiki pages. That's expected.
 
